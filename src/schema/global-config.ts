@@ -1,13 +1,5 @@
 import { z } from "zod";
 
-const NavItemSchema = z.object({
-    id: z.string(),
-    label: z.string(),
-    path: z.string(),
-    icon: z.string(),
-    moduleId: z.string(),
-});
-
 export const GlobalConfigSchema = z.object({
     schemaVersion: z.string(),
     tenant: z.object({
@@ -21,8 +13,6 @@ export const GlobalConfigSchema = z.object({
         primaryColor: z.string().regex(/^#[0-9A-Fa-f]{6}$/),
         logoUrl: z.string(),
     }),
-    modules: z.array(z.string()),
-    nav: z.array(NavItemSchema),
 });
 
 export type GlobalConfig = z.infer<typeof GlobalConfigSchema>;
