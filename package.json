@@ -19,5 +19,9 @@
   "peerDependencies": {
     "react": "^18.0.0",
     "react-dom": "^18.0.0"
+  },
+  "dependencies": {
+    "vite": "^8.3.0",
+    "zod": "^4.6.4"
   }
 }
