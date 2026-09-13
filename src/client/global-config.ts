@@ -2,6 +2,7 @@ import type { GlobalConfig } from "../schema/global-config";
 import { validateGlobalConfig } from "../schema/global-config";
 import { getCached, setCached } from "./cache";
 
+const CLIENT_SCOPE = 'global';
 const CACHE_KEY = "global-config";
 const CACHE_TTL_MS = 1800000; // 30 minutes
 
@@ -23,7 +24,9 @@ export async function fetchGlobalConfig(
         return cached;
     }
 
-    const response = await fetch("", {
+    const url = `${import.meta.env.VITE_API_URL}/tenant/${tenantId}/config?scope=${CLIENT_SCOPE}`;
+
+    const response = await fetch(url, {
         headers: { Authorization: `Bearer ${token}` },
     });
 
