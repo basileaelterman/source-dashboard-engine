@@ -2,7 +2,7 @@ import type { GlobalConfig } from "../schema/global-config";
 import { validateGlobalConfig } from "../schema/global-config";
 import { getCached, setCached } from "./cache";
 
-const CLIENT_SCOPE = 'global';
+const SCOPE = 'global';
 const CACHE_KEY = "global-config";
 const CACHE_TTL_MS = 1800000; // 30 minutes
 
@@ -24,10 +24,24 @@ export async function fetchGlobalConfig(
         return cached;
     }
 
-    const url = `${import.meta.env.VITE_API_URL}/tenant/${tenantId}/config?scope=${CLIENT_SCOPE}`;
+    const apiUrl = process.env.API_URL;
+    const clientId = process.env.CLIENT_ID;
+
+    if (!apiUrl) {
+        throw new Error("API_URL is not set in .env");
+    }
+    if (!clientId) {
+        throw new Error("CLIENT_ID is not set in .env");
+    }
+
+    const url = `${apiUrl}/tenants/${tenantId}/config?scope=${SCOPE}`;
 
     const response = await fetch(url, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+            "X-Client-Id": clientId,
+        },
     });
 
     if (!response.ok) {
