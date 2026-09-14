@@ -1,24 +1,24 @@
-import type { ClientConfig } from "../schema/client-config";
-import { validateClientConfig } from "../schema/client-config";
+import type { SessionConfig } from "../schema/session-config";
+import { validateSessionConfig } from "../schema/session-config";
 import { getCached, setCached } from "./cache";
 
-const SCOPE = 'client';
-const CACHE_KEY = "client-config";
+const SCOPE = 'session';
+const CACHE_KEY = "session-config";
 const CACHE_TTL_MS = 600000; // 10 minutes
 
 /**
- * fetchClientConfig() fetches the client configuration data 
+ * fetchSessionConfig() fetches the session configuration data 
  * for this particular tenant.
  * 
  * @param tenantId the ID of this tenant.
  * @param token a valid JWT token.
  * @returns an object with valid configuration data.
  */
-export async function fetchClientConfig(
+export async function fetchSessionConfig(
     tenantId: string,
     token: string,
-): Promise<ClientConfig> {
-    const cached = getCached<ClientConfig>(CACHE_KEY, tenantId);
+): Promise<SessionConfig> {
+    const cached = getCached<SessionConfig>(CACHE_KEY, tenantId);
 
     if (cached) {
         return cached;
@@ -40,16 +40,16 @@ export async function fetchClientConfig(
         headers: {
             Accept: "application/json",
             Authorization: `Bearer ${token}`,
-            "X-Client-Id": clientId,
+            "X-Session-Id": clientId,
         },
     });
 
     if (!response.ok) {
-        throw new Error(`Failed to fetch client config: ${response.status}`);
+        throw new Error(`Failed to fetch session config: ${response.status}`);
     }
 
     const raw = await response.json();
-    const config = validateClientConfig(raw);
+    const config = validateSessionConfig(raw);
 
     setCached(CACHE_KEY, tenantId, config, CACHE_TTL_MS);
 
