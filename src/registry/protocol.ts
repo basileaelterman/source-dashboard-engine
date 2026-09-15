@@ -1,7 +1,6 @@
 import type { ComponentType, ReactNode } from "react";
 import type { ComponentNode } from "../schema/component-node";
 
-
 /**
  * The protocol version. Bump only on a breaking change
  * to the shapes below.
